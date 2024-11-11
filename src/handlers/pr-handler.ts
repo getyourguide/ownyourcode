@@ -1,5 +1,5 @@
-import type { GitHubService } from "../github-service.ts";
-import type { Handler } from "./index.ts";
+import type { GitHubService } from "../github-service";
+import type { Handler } from "./index";
 
 const COMMENT_HEADER = "## OwnYourCode\n";
 

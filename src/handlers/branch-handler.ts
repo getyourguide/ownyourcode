@@ -1,5 +1,5 @@
-import type { GitHubService } from "../github-service.ts";
-import type { Handler } from "./index.ts";
+import type { GitHubService } from "../github-service";
+import type { Handler } from "./index";
 
 export class BranchHandler implements Handler {
   constructor(
@@ -16,7 +16,8 @@ export class BranchHandler implements Handler {
     return await this.githubService.getAllFiles(this.branch);
   }
 
-  async createOrUpdatePrComment(noOwnerArr: string[]) {
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  async createOrUpdatePrComment(_noOwnerArr: string[]) {
     return Promise.resolve();
   }
 }

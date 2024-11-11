@@ -1,4 +1,4 @@
-import type { Octokit } from "./main.ts";
+import type { Octokit } from "./main";
 
 export class GitHubService {
   constructor(
@@ -20,7 +20,8 @@ export class GitHubService {
       }
       const content = Buffer.from(data.content, "base64").toString("utf-8");
       return content;
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    } catch (_) {
       throw new Error(
         `Error reading the CODEOWNERS file ${this.owner}/${this.repo}/${filePath}\nMake sure the file exists and the github token has access to the repo`,
       );
@@ -59,23 +60,12 @@ export class GitHubService {
     const files: string[] = [];
 
     data.tree.forEach(node => {
-      if (node.type === "blob") {
-        node.path && files.push(node.path);
+      if (node.type === "blob" && node.path) {
+        files.push(node.path);
       }
     });
 
     return files;
-  }
-
-  private walkTree(tree: any, path: string, files: string[]) {
-    for (const node of tree) {
-      const filePath = path ? `${path}/${node.path}` : node.path;
-      if (node.type === "blob") {
-        files.push(filePath);
-      } else if (node.type === "tree") {
-        this.walkTree(node.tree, filePath, files);
-      }
-    }
   }
 
   async createComment(prNumber: number, body: string): Promise<void> {

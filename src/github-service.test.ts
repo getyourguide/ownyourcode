@@ -1,6 +1,6 @@
 import { GitHubService } from "./github-service";
 import { describe, vi, it, expect, beforeEach } from "vitest";
-import type { Octokit } from "./main.ts";
+import type { Octokit } from "./main";
 
 // Mock Octokit methods
 vi.mock("@actions/github");
@@ -13,8 +13,6 @@ describe("GitHubService", () => {
   // Mock owner, and repo for testing
   const owner = "getyourguide";
   const repo = "actions";
-  const prNumber = 1;
-  const branchName = "feature/branch";
 
   beforeEach(() => {
     mockOctokit = {

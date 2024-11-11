@@ -1,8 +1,8 @@
 import { describe, it, vi, expect, beforeAll, afterEach } from "vitest";
 import * as core from "@actions/core";
 import * as github from "@actions/github";
-import { run } from "./main.ts";
-import { BranchHandler, PrHandler } from "./handlers/index.ts";
+import { run } from "./main";
+import { BranchHandler, PrHandler } from "./handlers/index";
 
 vi.mock("./handlers/index.ts");
 vi.mock("@actions/core");

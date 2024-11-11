@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { CodeOwners } from "./codeowners.ts";
+import { CodeOwners } from "./codeowners";
 
 const codeownersPath = "./CODEOWNERS";
 const CodeOwnersFile = `

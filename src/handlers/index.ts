@@ -1,5 +1,5 @@
-export { PrHandler } from "./pr-handler.ts";
-export { BranchHandler } from "./branch-handler.ts";
+export { PrHandler } from "./pr-handler";
+export { BranchHandler } from "./branch-handler";
 
 export interface Handler {
   getCodeOwnersFile(filePath: string): Promise<string>;

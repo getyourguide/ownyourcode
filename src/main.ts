@@ -6,9 +6,9 @@ import {
   info,
 } from "@actions/core";
 import { context as ghContext, getOctokit } from "@actions/github";
-import { GitHubService } from "./github-service.ts";
-import { CodeOwners } from "./codeowners.ts";
-import { BranchHandler, PrHandler } from "./handlers/index.ts";
+import { GitHubService } from "./github-service";
+import { CodeOwners } from "./codeowners";
+import { BranchHandler, PrHandler } from "./handlers/index";
 
 export type Octokit = ReturnType<typeof getOctokit>;
 
@@ -30,7 +30,7 @@ export async function run() {
     const changedFiles = await handler.getChangedFiles();
     const codeowners = new CodeOwners(codeownersFile, codeownersPath);
 
-    const { noOwnerArr, failed } = await checkFilesOwners(
+    const { noOwnerArr, failed } = checkFilesOwners(
       changedFiles,
       codeowners,
       failOnMissing,
@@ -41,8 +41,8 @@ export async function run() {
     setOutput("total_scanned_files", changedFiles.length);
     setOutput("total_orphan_files", noOwnerArr.length);
     setOutput("failed", failed);
-  } catch (error: any) {
-    setFailed(`OwnYourCode action failed: ${error.message}`);
+  } catch (error) {
+    setFailed(`OwnYourCode action failed: ${(error as Error).message}`);
   }
 }
 
@@ -75,7 +75,7 @@ function welcomeMessage(
   info(`----------------------------------\n`);
 }
 
-async function checkFilesOwners(
+function checkFilesOwners(
   files: string[],
   codeowners: CodeOwners,
   failOnMissingCodeowners: boolean,
