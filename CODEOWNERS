@@ -1,3 +1,15 @@
-# Repository CODEOWNERS
-
-* @getyourguide/tp
+.devcontainers            @getyourguide/tp
+.github                   @getyourguide/tp
+.vscode                   @getyourguide/tp
+dist                      @getyourguide/tp
+script                    @getyourguide/tp
+src                       @getyourguide/tp
+.env.example              @getyourguide/tp
+.gitignore                @getyourguide/tp
+.prettier*                @getyourguide/tp
+actions.yml               @getyourguide/tp
+LICENSE                   @getyourguide/tp
+package*                  @getyourguide/tp
+README.md                 @getyourguide/tp
+tsconfig.json             @getyourguide/tp
+vitest.config.ts          @getyourguide/tp
