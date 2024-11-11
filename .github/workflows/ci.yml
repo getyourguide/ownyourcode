@@ -44,8 +44,8 @@ jobs:
         id: npm-ci-test
         run: npm run ci-test
 
-  test-action:
-    name: GitHub Actions Test
+  test-action-pr:
+    name: Test action - PR
     runs-on: ubuntu-latest
 
     permissions:
@@ -75,6 +75,46 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr-number: ${{ github.event.number }}
+
+      - name: Print Output
+        id: output
+        run: |
+          echo "${{ steps.test-action.outputs.total_orphan_files }}"
+          echo "${{ steps.test-action.outputs.total_scanned_files }}"
+          echo "${{ steps.test-action.outputs.failed }}"
+
+  test-action-branch:
+    name: Test action - Branch
+    runs-on: ubuntu-latest
+
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write # we need this to write comments in PRs
+
+    steps:
+      - name: Checkout
+        id: checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        id: setup-node
+        uses: actions/setup-node@v4
+        with:
+          node-version-file: .node-version
+          cache: npm
+
+      - name: Install Dependencies
+        id: npm-ci
+        run: npm ci
+
+      - name: Test Local Action
+        id: test-action
+        uses: ./
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          branch: ${{ github.ref_name }}
+          fail-on-missing-codeowners: false
 
       - name: Print Output
         id: output
