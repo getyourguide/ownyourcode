@@ -1,21 +1,17 @@
 {
-  "$schema": "https://json.schemastore.org/tsconfig",
+  "extends": "./node_modules/@tsconfig/node20/tsconfig.json",
+
   "compilerOptions": {
-    "target": "ES2022",
-    "module": "NodeNext",
-    "rootDir": "./src",
-    "moduleResolution": "NodeNext",
     "baseUrl": "./",
-    "sourceMap": true,
+    "rootDir": "./src",
     "outDir": "./dist",
+    "sourceMap": true,
     "noImplicitAny": true,
-    "esModuleInterop": true,
-    "forceConsistentCasingInFileNames": true,
-    "strict": true,
-    "skipLibCheck": true,
-    "newLine": "lf",
-    "noEmit": true,
-    "allowImportingTsExtensions": true
+    "forceConsistentCasingInFileNames": true
+
+    // Can't use ts extensions due to a known bug in ncc https://github.com/vercel/ncc/issues/1146
+    // "noEmit": true,
+    // "allowImportingTsExtensions": true
   },
   "include": ["./src"],
   "exclude": ["./dist", "./node_modules", "./coverage", "./.github"]
