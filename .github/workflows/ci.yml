@@ -55,10 +55,6 @@ jobs:
       pull-requests: write # we need this to write comments in PRs
 
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Test Local Action
         id: test-action
         uses: ./
@@ -83,10 +79,6 @@ jobs:
       pull-requests: write # we need this to write comments in PRs
 
     steps:
-      - name: Checkout
-        id: checkout
-        uses: actions/checkout@v4
-
       - name: Test Local Action
         id: test-action
         uses: ./
