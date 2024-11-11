@@ -1,4 +1,5 @@
 import globToRegExp from "glob-to-regexp";
+import { escapeRegex } from "./utils";
 
 type Rule = [RegExp, string];
 export class CodeOwners {
@@ -26,7 +27,7 @@ export class CodeOwners {
         return [regexp, owner];
       });
 
-    this.codeownersPath = codeownersPath;
+    this.codeownersPath = escapeRegex(codeownersPath);
   }
 
   isCovered(filePath: string): boolean {
