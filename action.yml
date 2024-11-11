@@ -25,9 +25,6 @@ inputs:
     description: "Path to the codeowners file"
     default: "CODEOWNERS"
     required: false
-  codeartifact-auth-token:
-    description: "Token for the registry"
-    required: true
 
 outputs:
   total_orphan_files:
