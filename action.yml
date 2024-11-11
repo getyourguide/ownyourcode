@@ -28,6 +28,7 @@ inputs:
   codeartifact-auth-token:
     description: "Token for the registry"
     required: true
+
 outputs:
   total_orphan_files:
     description: "Total number of orphaned files"
@@ -40,5 +41,31 @@ outputs:
     value: ${{ steps.codeowners.outputs.failed }}
 
 runs:
-  using: node20
-  main: dist/index.js
+  using: "composite"
+  steps:
+    - name: Checkout
+      id: checkout
+      uses: actions/checkout@v4
+
+    - name: Setup Node.js
+      id: setup-node
+      uses: actions/setup-node@v4
+      with:
+        node-version-file: .node-version
+        cache: npm
+
+    - name: Install Dependencies
+      shell: bash
+      id: npm-ci
+      run: npm ci
+
+    - name: Check Codeowners
+      shell: bash
+      run: node ./dist/index.js
+      env:
+        INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
+        INPUT_CODEOWNERS_PATH: ${{ inputs.codeowners_path }}
+        INPUT_PR_NUMBER: ${{ inputs.pr-number }}
+        INPUT_FAIL_ON_MISSING_CODEOWNERS:
+          ${{ inputs.fail-on-missing-codeowners }}
+        INPUT_BRANCH: ${{ inputs.branch }}
