@@ -1,93 +1,246 @@
-/**
- * Unit tests for the action's main functionality, src/main.ts
- *
- * These should be run as if the action was called from a workflow.
- * Specifically, the inputs listed in `action.yml` should be set as environment
- * variables following the pattern `INPUT_<INPUT_NAME>`.
- */
-
+import { describe, it, vi, expect, beforeAll, afterEach } from "vitest";
 import * as core from "@actions/core";
-import * as main from "./main";
-import { vi, MockInstance, describe, beforeEach, it, expect } from "vitest";
+import * as github from "@actions/github";
+import { run } from "./main.ts";
+import { BranchHandler, PrHandler } from "./handlers/index.ts";
 
-// Mock the action's main function
-const runMock = vi.spyOn(main, "run");
+vi.mock("./handlers/index.ts");
+vi.mock("@actions/core");
 
-// Other utilities
-const timeRegex = /^\d{2}:\d{2}:\d{2}/;
+const mockLog = vi.spyOn(core, "info");
+const parseOutput = (input: string) =>
+  input.trim().replace(/^\s+/gm, match => match.replace(/ /g, ""));
+const mockSetOutput = vi.spyOn(core, "setOutput").mockImplementation(() => {});
+// Mock github context
+vi.spyOn(github.context, "repo", "get").mockImplementation(() => {
+  return {
+    owner: "getyourguide",
+    repo: "actions",
+  };
+});
 
-// Mock the GitHub Actions core library
-let debugMock: MockInstance<typeof core.debug>;
-let errorMock: MockInstance<typeof core.error>;
-let getInputMock: MockInstance<typeof core.getInput>;
-let setFailedMock: MockInstance<typeof core.setFailed>;
-let setOutputMock: MockInstance<typeof core.setOutput>;
+describe("OwnYourCode - PR Mode", () => {
+  const inputs: Record<string, string> = {
+    GITHUB_TOKEN: "token-123",
+    CODEOWNERS_PATH: "./CODEOWNERS.md",
+    FAIL_ON_MISSING_CODEOWNERS: "true",
+    PR_NUMBER: "23",
+  };
 
-describe("action", () => {
-  beforeEach(() => {
-    vi.clearAllMocks();
-
-    debugMock = vi.spyOn(core, "debug").mockImplementation(() => {});
-    errorMock = vi.spyOn(core, "error").mockImplementation(() => {});
-    getInputMock = vi.spyOn(core, "getInput").mockImplementation(() => "");
-    setFailedMock = vi.spyOn(core, "setFailed").mockImplementation(() => {});
-    setOutputMock = vi.spyOn(core, "setOutput").mockImplementation(() => {});
+  beforeAll(() => {
+    vi.spyOn(core, "getInput").mockImplementation((name: string) => {
+      return inputs[name];
+    });
+    vi.spyOn(core, "getBooleanInput").mockImplementation((name: string) => {
+      return inputs[name] === "true";
+    });
+    mockSetOutput.mockClear();
+  });
+  afterEach(() => {
+    mockLog.mockClear();
   });
 
-  it("sets the time output", async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case "milliseconds":
-          return "500";
-        default:
-          return "";
-      }
-    });
+  it("should log files missing codeowners", async () => {
+    vi.spyOn(PrHandler.prototype, "getCodeOwnersFile").mockResolvedValueOnce(
+      "__FILE-CONTENT__",
+    );
+    vi.spyOn(PrHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "README.md",
+      "docs/api.md",
+      "src/index.ts",
+    ]);
 
-    await main.run();
-    expect(runMock).toHaveReturned();
+    await run();
 
-    // Verify that all of the core library functions were called correctly
-    expect(debugMock).toHaveBeenNthCalledWith(
-      1,
-      "Waiting 500 milliseconds ...",
+    const output = mockLog.mock.calls
+      .map(call => call[0])
+      .join("\n")
+      .trim();
+
+    expect(output).toEqual(
+      parseOutput(`
+       ----------- OwnYourCode ----------
+        Repo: actions
+        File: ./CODEOWNERS.md
+        Fail on missing: true
+        Mode: Check PR changed files
+        PR: #23
+       ----------------------------------
+
+       List of files not covered ❌
+       README.md
+       docs/api.md
+       src/index.ts
+    `),
     );
-    expect(debugMock).toHaveBeenNthCalledWith(
-      2,
-      expect.stringMatching(timeRegex),
-    );
-    expect(debugMock).toHaveBeenNthCalledWith(
-      3,
-      expect.stringMatching(timeRegex),
-    );
-    expect(setOutputMock).toHaveBeenNthCalledWith(
-      1,
-      "time",
-      expect.stringMatching(timeRegex),
-    );
-    expect(errorMock).not.toHaveBeenCalled();
   });
 
-  it("sets a failed status", async () => {
-    // Set the action's inputs as return values from core.getInput()
-    getInputMock.mockImplementation(name => {
-      switch (name) {
-        case "milliseconds":
-          return "this is not a number";
-        default:
-          return "";
-      }
-    });
-
-    await main.run();
-    expect(runMock).toHaveReturned();
-
-    // Verify that all of the core library functions were called correctly
-    expect(setFailedMock).toHaveBeenNthCalledWith(
-      1,
-      "milliseconds not a number",
+  it("should log files with valid codeowners", async () => {
+    vi.spyOn(PrHandler.prototype, "getCodeOwnersFile").mockResolvedValueOnce(
+      "README.md @getyourguide/tp",
     );
-    expect(errorMock).not.toHaveBeenCalled();
+    vi.spyOn(PrHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "README.md",
+    ]);
+
+    await run();
+
+    const output = mockLog.mock.calls
+      .map(call => call[0])
+      .join("\n")
+      .trim();
+
+    expect(output).toEqual(
+      parseOutput(`
+       ----------- OwnYourCode ----------
+        Repo: actions
+        File: ./CODEOWNERS.md
+        Fail on missing: true
+        Mode: Check PR changed files
+        PR: #23
+       ----------------------------------
+
+       List of covered files ✅
+       README.md
+    `),
+    );
+  });
+
+  it("should fail if files have no owners", async () => {
+    vi.spyOn(PrHandler.prototype, "getCodeOwnersFile").mockResolvedValueOnce(
+      "README.md @getyourguide/tp",
+    );
+    vi.spyOn(PrHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "docs/api.md",
+      "src/index.ts",
+    ]);
+    const mockSetFailed = vi.spyOn(core, "setFailed");
+
+    await run();
+    expect(mockSetFailed).toHaveBeenCalledWith(
+      "Some files do not have an owner, please define one in CODEOWNERS file",
+    );
+  });
+
+  it("should fail if CODEOWNERS file is not present", async () => {
+    const mockGetCodeOwnersFile = vi
+      .spyOn(PrHandler.prototype, "getCodeOwnersFile")
+      .mockRejectedValueOnce(new Error("CODEOWNERS file not present"));
+    const mockSetFailed = vi.spyOn(core, "setFailed");
+
+    await run();
+    expect(mockGetCodeOwnersFile).toHaveBeenCalledWith("./CODEOWNERS.md");
+    expect(mockSetFailed).toHaveBeenCalledWith(
+      "OwnYourCode action failed: CODEOWNERS file not present",
+    );
+  });
+
+  it("should not fail if files have no owners but fail-on-missing-codeowners input is false", async () => {
+    inputs.FAIL_ON_MISSING_CODEOWNERS = "false";
+    vi.spyOn(PrHandler.prototype, "getCodeOwnersFile").mockResolvedValueOnce(
+      "__FILE-CONTENT__",
+    );
+    vi.spyOn(PrHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "README.md",
+      "docs/api.md",
+      "src/index.ts",
+    ]);
+    const mockSetFailed = vi.spyOn(core, "setFailed");
+
+    await run();
+    expect(mockSetFailed).not.toHaveBeenCalled();
+
+    // Reset input
+    inputs.FAIL_ON_MISSING_CODEOWNERS = "true";
+  });
+});
+
+describe("OwnYourCode - Branch Mode", () => {
+  const inputs: Record<string, string> = {
+    GITHUB_TOKEN: "token-123",
+    CODEOWNERS_PATH: "./CODEOWNERS.md",
+    FAIL_ON_MISSING_CODEOWNERS: "true",
+    BRANCH: "main",
+  };
+
+  beforeAll(() => {
+    vi.spyOn(core, "getInput").mockImplementation((name: string) => {
+      return inputs[name];
+    });
+    vi.spyOn(core, "getBooleanInput").mockImplementation((name: string) => {
+      return inputs[name] === "true";
+    });
+    mockSetOutput.mockClear();
+  });
+  afterEach(() => {
+    mockLog.mockClear();
+  });
+
+  it("should log files missing codeowners", async () => {
+    vi.spyOn(
+      BranchHandler.prototype,
+      "getCodeOwnersFile",
+    ).mockResolvedValueOnce("__FILE-CONTENT__");
+    vi.spyOn(BranchHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "README.md",
+      "docs/api.md",
+      "src/index.ts",
+    ]);
+
+    await run();
+
+    const output = mockLog.mock.calls
+      .map(call => call[0])
+      .join("\n")
+      .trim();
+
+    expect(output).toEqual(
+      parseOutput(`
+       ----------- OwnYourCode ----------
+        Repo: actions
+        File: ./CODEOWNERS.md
+        Fail on missing: true
+        Mode: Check all branch files
+        Branch: main
+       ----------------------------------
+
+       List of files not covered ❌
+       README.md
+       docs/api.md
+       src/index.ts
+    `),
+    );
+  });
+
+  it("should log files with valid codeowners", async () => {
+    vi.spyOn(
+      BranchHandler.prototype,
+      "getCodeOwnersFile",
+    ).mockResolvedValueOnce("README.md @getyourguide/tp");
+    vi.spyOn(BranchHandler.prototype, "getChangedFiles").mockResolvedValueOnce([
+      "README.md",
+    ]);
+
+    await run();
+
+    const output = mockLog.mock.calls
+      .map(call => call[0])
+      .join("\n")
+      .trim();
+
+    expect(output).toEqual(
+      parseOutput(`
+       ----------- OwnYourCode ----------
+        Repo: actions
+        File: ./CODEOWNERS.md
+        Fail on missing: true
+        Mode: Check all branch files
+        Branch: main
+       ----------------------------------
+
+       List of covered files ✅
+       README.md
+    `),
+    );
   });
 });
