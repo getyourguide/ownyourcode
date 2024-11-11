@@ -7,7 +7,7 @@ src                       @getyourguide/tp
 .env.example              @getyourguide/tp
 .gitignore                @getyourguide/tp
 .prettier*                @getyourguide/tp
-actions.yml               @getyourguide/tp
+action.yml               @getyourguide/tp
 LICENSE                   @getyourguide/tp
 package*                  @getyourguide/tp
 README.md                 @getyourguide/tp
