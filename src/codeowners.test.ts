@@ -6,11 +6,11 @@ const CodeOwnersFile = `
 * @getyourguide/den
 
 # Make sure all actions are owned by a team
-airflow-rest-client            @getyourguide/cdp
-build-version                  @getyourguide/den
-coverage-guard                 @getyourguide/tp
-own-your-code                  @getyourguide/tp
-compass-analyzer               @getyourguide/tpna
+never-gonna-give-you-up        @getyourguide/foo
+never-gonna-let-you-down       @getyourguide/bar
+never/gonna/run/around         @getyourguide/baz
+never/gonna/say/goodbye        @getyourguide/foo
+own-your-code                  @getyourguide/bar
 path/to/file/                  @getyourguide/tp
 packages/commons/utils/**tests**/query-params.test.ts @getyourguide/tp
 *bundles*                      @getyourguide/ce
@@ -46,12 +46,12 @@ describe("CodeOwnersFile.isCovered", () => {
 
 it("should handle file using tabs only", () => {
   const CodeOwnersFile = `
-    * @getyourguide/den
-    airflow-rest-client\t\t\t\t\t@getyourguide/cdp
-    */test-file										@getyourguide/cdp
+    * @getyourguide/baz
+    never-gonna-give-you-up        @getyourguide/foo
+    */test-file                    @getyourguide/bar
   `;
   const codeowners = new CodeOwners(CodeOwnersFile, codeownersPath);
-  expect(codeowners.isCovered("airflow-rest-client")).toBe(true);
+  expect(codeowners.isCovered("never-gonna-give-you-up")).toBe(true);
   expect(codeowners.isCovered("path/test-file")).toBe(true);
 });
 
