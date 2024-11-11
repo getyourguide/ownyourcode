@@ -28,16 +28,16 @@ inputs:
   codeartifact-auth-token:
     description: "Token for the registry"
     required: true
-# outputs:
-#   total_orphan_files:
-#     description: "Total number of orphaned files"
-#     value: ${{ steps.codeowners.outputs.total_orphan_files }}
-#   total_scanned_files:
-#     description: "Total files"
-#     value: ${{ steps.codeowners.outputs.total_scanned_files }}
-#   failed:
-#     description: "If the action failed"
-#     value: ${{ steps.codeowners.outputs.failed }}
+outputs:
+  total_orphan_files:
+    description: "Total number of orphaned files"
+    value: ${{ steps.codeowners.outputs.total_orphan_files }}
+  total_scanned_files:
+    description: "Total files"
+    value: ${{ steps.codeowners.outputs.total_scanned_files }}
+  failed:
+    description: "If the action failed"
+    value: ${{ steps.codeowners.outputs.failed }}
 
 runs:
   using: node20
