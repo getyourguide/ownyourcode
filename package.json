@@ -4,6 +4,7 @@
   "description": "Github Action to automate CODEOWNERS checks",
   "author": "",
   "private": true,
+  "type": "module",
   "homepage": "https://github.com/getyourguide/ownyourcode",
   "repository": {
     "type": "git",
@@ -30,27 +31,31 @@
     "format:check": "prettier --check .",
     "lint": "eslint . -c ./.github/linters/eslint.config.mjs",
     "local-action": "local-action . src/main.ts .env",
-    "package": "ncc build src/index.ts -o dist --source-map --license licenses.txt",
+    "package": "pkgroll --clean-dist -m --sourcemap",
     "package:watch": "npm run package -- --watch",
     "test": "vitest run --coverage",
     "all": "npm run format:write && npm run lint && npm run test && npm run package"
   },
   "license": "MIT",
   "dependencies": {
-    "@actions/core": "^1.11.1"
+    "@actions/core": "1.11.1",
+    "@actions/github": "6.0.0",
+    "@types/glob-to-regexp": "^0.4.4",
+    "glob-to-regexp": "0.4.1"
   },
   "devDependencies": {
     "@github/local-action": "^2.1.3",
+    "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.8.7",
     "@typescript-eslint/eslint-plugin": "^8.12.2",
     "@typescript-eslint/parser": "^8.12.2",
-    "@vercel/ncc": "^0.38.2",
     "@vitest/coverage-v8": "^2.1.4",
     "@vitest/eslint-plugin": "^1.1.8",
     "eslint": "^9.14.0",
     "eslint-plugin-jsonc": "^2.16.0",
     "eslint-plugin-prettier": "^5.2.1",
     "make-coverage-badge": "^1.2.0",
+    "pkgroll": "^2.5.1",
     "prettier": "^3.3.3",
     "prettier-eslint": "^16.3.0",
     "typescript": "^5.6.3",
