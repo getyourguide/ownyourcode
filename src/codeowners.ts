@@ -1,5 +1,5 @@
 import globToRegExp from "glob-to-regexp";
-import { escapeRegex } from "./utils";
+import { escapeRegex } from "./utils.ts";
 
 type Rule = [RegExp, string];
 export class CodeOwners {

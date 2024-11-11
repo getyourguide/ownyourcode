@@ -1,6 +1,6 @@
-import { GitHubService } from "./github-service";
+import { GitHubService } from "./github-service.ts";
 import { describe, vi, it, expect, beforeEach } from "vitest";
-import type { Octokit } from "./main";
+import type { Octokit } from "./main.ts";
 
 // Mock Octokit methods
 vi.mock("@actions/github");

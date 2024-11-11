@@ -1,5 +1,5 @@
-import type { GitHubService } from "../github-service";
-import type { Handler } from "./index";
+import type { GitHubService } from "../github-service.ts";
+import type { Handler } from "./index.ts";
 
 export class BranchHandler implements Handler {
   constructor(

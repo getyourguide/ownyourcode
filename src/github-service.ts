@@ -1,4 +1,4 @@
-import type { Octokit } from "./main";
+import type { Octokit } from "./main.ts";
 
 export class GitHubService {
   constructor(

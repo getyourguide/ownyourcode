@@ -1,6 +1,6 @@
 import { describe, expect, it, vi, Mocked, afterEach } from "vitest";
-import { PrHandler } from "./pr-handler";
-import { GitHubService } from "../github-service";
+import { PrHandler } from "./pr-handler.ts";
+import { GitHubService } from "../github-service.ts";
 
 describe("PrHandler", () => {
   const githubService = {

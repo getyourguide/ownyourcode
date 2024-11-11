@@ -1,6 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
-import { BranchHandler } from "./branch-handler";
-import { GitHubService } from "../github-service";
+import { BranchHandler } from "./branch-handler.ts";
+import { GitHubService } from "../github-service.ts";
 
 describe("PrHandler", () => {
   const githubService = {

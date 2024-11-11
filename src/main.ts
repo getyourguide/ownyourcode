@@ -6,9 +6,9 @@ import {
   info,
 } from "@actions/core";
 import { context as ghContext, getOctokit } from "@actions/github";
-import { GitHubService } from "./github-service";
-import { CodeOwners } from "./codeowners";
-import { BranchHandler, PrHandler } from "./handlers/index";
+import { GitHubService } from "./github-service.ts";
+import { CodeOwners } from "./codeowners.ts";
+import { BranchHandler, PrHandler } from "./handlers/index.ts";
 
 export type Octokit = ReturnType<typeof getOctokit>;
 

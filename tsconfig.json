@@ -7,11 +7,9 @@
     "outDir": "./dist",
     "sourceMap": true,
     "noImplicitAny": true,
-    "forceConsistentCasingInFileNames": true
-
-    // Can't use ts extensions due to a known bug in ncc https://github.com/vercel/ncc/issues/1146
-    // "noEmit": true,
-    // "allowImportingTsExtensions": true
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true
   },
   "include": ["./src"],
   "exclude": ["./dist", "./node_modules", "./coverage", "./.github"]

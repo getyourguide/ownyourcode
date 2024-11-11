@@ -25,7 +25,7 @@ export default [
       "lib",
       "**/*.json",
       "eslint.config.mjs",
-      "vitest.config.mjs",
+      "vitest.config.ts",
       "dist/**/*.ts",
       "dist/**",
       "**/*.mjs",
