@@ -1,23 +1,43 @@
-name: 'The name of your action here'
-description: 'Provide a description here'
-author: 'Your name or organization here'
+name: 'ownyourcode'
+description: 'Identify orphan files missing codeowners'
+author: 'Girges Scandar'
 
 # Add your action's branding here. This will appear on the GitHub Marketplace.
 branding:
-  icon: 'heart'
-  color: 'red'
+  icon: 'users'
+  color: 'orange'
 
-# Define your inputs here.
 inputs:
-  milliseconds:
-    description: 'Your input description here'
+  fail-on-missing-codeowners:
+    description: 'Fail CI if there are files without owners'
+    default: 'true'
+    required: false
+  github_token:
+    description: 'Github Token'
     required: true
-    default: '1000'
-
-# Define your outputs here.
-outputs:
-  time:
-    description: 'Your output description here'
+  pr-number:
+    description: 'Scan only the files modified in the PR'
+    required: false
+  branch:
+    description: 'Scan all files in the specified branch'
+    required: false
+  codeowners_path:
+    description: 'Path to the codeowners file'
+    default: 'CODEOWNERS'
+    required: false
+  codeartifact-auth-token:
+    description: 'Token for the registry'
+    required: true
+# outputs:
+#   total_orphan_files:
+#     description: "Total number of orphaned files"
+#     value: ${{ steps.codeowners.outputs.total_orphan_files }}
+#   total_scanned_files:
+#     description: "Total files"
+#     value: ${{ steps.codeowners.outputs.total_scanned_files }}
+#   failed:
+#     description: "If the action failed"
+#     value: ${{ steps.codeowners.outputs.failed }}
 
 runs:
   using: node20
