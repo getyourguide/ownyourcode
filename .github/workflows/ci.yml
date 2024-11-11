@@ -48,6 +48,11 @@ jobs:
     name: GitHub Actions Test
     runs-on: ubuntu-latest
 
+    permissions:
+      id-token: write
+      contents: read
+      pull-requests: write # we need this to write comments in PRs
+
     steps:
       - name: Checkout
         id: checkout
