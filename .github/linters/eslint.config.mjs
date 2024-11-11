@@ -75,13 +75,6 @@ export default [
         },
       ],
 
-      "@typescript-eslint/explicit-function-return-type": [
-        "error",
-        {
-          allowExpressions: true,
-        },
-      ],
-
       "@typescript-eslint/no-empty-interface": "error",
       "@typescript-eslint/no-extraneous-class": "error",
       "@typescript-eslint/no-inferrable-types": "error",
@@ -96,6 +89,8 @@ export default [
       "@typescript-eslint/promise-function-async": "error",
       "@typescript-eslint/require-array-sort-compare": "error",
       "@typescript-eslint/space-before-function-paren": "off",
+      "@typescript-eslint/unbound-method": "off",
+      "@typescript-eslint/no-unused-expressions": "off",
     },
   },
   {
