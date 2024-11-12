@@ -59,6 +59,7 @@ runs:
       run: npm ci
 
     - name: Check Codeowners
+      id: codeowners
       shell: bash
       run: node ./dist/index.js
       env:
