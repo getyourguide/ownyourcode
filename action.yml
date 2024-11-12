@@ -44,7 +44,7 @@ runs:
       id: checkout
       uses: actions/checkout@v4
       with:
-        repository: ${{ github.action_repository }}
+        repository: "getyourguide/ownyourcode"
 
     - name: Setup Node.js
       id: setup-node
