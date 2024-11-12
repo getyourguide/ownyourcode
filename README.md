@@ -44,7 +44,7 @@ owner, a comment is added to the PR with the list of orphan files.
 ### Inputs
 
 - `github_token`: String - Github Token (required)
-- `fail-on-missing-codeowners`: Boolean - Fail CI if there are files without
+- `fail_on_missing_codeowners`: Boolean - Fail CI if there are files without
   owners (default: true)
 - `codeowners_path`: String - Path to the codeowners file (default: CODEOWNERS)
 - `pr_number`: Number - Scan only the files modified in the PR (optional if
@@ -139,7 +139,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref_name }}
-          fail-on-missing-codeowners: false # important for next step to work
+          fail_on_missing_codeowners: false # important for next step to work
 
       - name: Print Output
         run: |

@@ -95,7 +95,7 @@ jobs:
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: "main" # use ${{ github.ref_name }} when using this on a real branch
-          fail-on-missing-codeowners: false
+          fail_on_missing_codeowners: false
 
       - name: Print Output
         id: output
