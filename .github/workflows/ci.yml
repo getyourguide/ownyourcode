@@ -13,7 +13,6 @@ permissions:
   contents: read
   pull-requests: write # we need this to write comments in PRs
 
-
 jobs:
   test-typescript:
     name: TypeScript Tests
