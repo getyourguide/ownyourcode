@@ -119,7 +119,7 @@ jobs:
     steps:
       - name: Check CODEOWNERS
         id: ownyourcode
-        uses: getyourguide/ownyourcode@checkout-action-repo
+        uses: getyourguide/ownyourcode@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref_name }}
@@ -135,7 +135,7 @@ jobs:
     steps:
       - name: Check CODEOWNERS
         id: ownyourcode
-        uses: getyourguide/ownyourcode@checkout-action-repo
+        uses: getyourguide/ownyourcode@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           branch: ${{ github.ref_name }}
