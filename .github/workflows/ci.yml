@@ -9,7 +9,10 @@ on:
       - main
 
 permissions:
+  id-token: write
   contents: read
+  pull-requests: write # we need this to write comments in PRs
+
 
 jobs:
   test-typescript:
@@ -64,7 +67,7 @@ jobs:
         uses: ./
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr-number: ${{ github.event.number }}
+          pr_number: ${{ github.event.number }}
 
       - name: Print Output
         id: output

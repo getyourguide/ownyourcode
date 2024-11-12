@@ -15,7 +15,7 @@ inputs:
   github_token:
     description: "Github Token"
     required: true
-  pr-number:
+  pr_number:
     description: "Scan only the files modified in the PR"
     required: false
   branch:
@@ -62,7 +62,7 @@ runs:
       env:
         INPUT_GITHUB_TOKEN: ${{ inputs.github_token }}
         INPUT_CODEOWNERS_PATH: ${{ inputs.codeowners_path }}
-        INPUT_PR_NUMBER: ${{ inputs.pr-number }}
+        INPUT_PR_NUMBER: ${{ inputs.pr_number }}
         INPUT_FAIL_ON_MISSING_CODEOWNERS:
           ${{ inputs.fail-on-missing-codeowners }}
         INPUT_BRANCH: ${{ inputs.branch }}
