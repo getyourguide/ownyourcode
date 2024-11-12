@@ -8,7 +8,7 @@ branding:
   color: "orange"
 
 inputs:
-  fail-on-missing-codeowners:
+  fail_on_missing_codeowners:
     description: "Fail CI if there are files without owners"
     default: "true"
     required: false
@@ -43,6 +43,8 @@ runs:
     - name: Checkout
       id: checkout
       uses: actions/checkout@v4
+      with:
+        repository: "getyourguide/ownyourcode"
 
     - name: Setup Node.js
       id: setup-node
@@ -57,6 +59,7 @@ runs:
       run: npm ci
 
     - name: Check Codeowners
+      id: codeowners
       shell: bash
       run: node ./dist/index.js
       env:
@@ -64,5 +67,5 @@ runs:
         INPUT_CODEOWNERS_PATH: ${{ inputs.codeowners_path }}
         INPUT_PR_NUMBER: ${{ inputs.pr_number }}
         INPUT_FAIL_ON_MISSING_CODEOWNERS:
-          ${{ inputs.fail-on-missing-codeowners }}
+          ${{ inputs.fail_on_missing_codeowners }}
         INPUT_BRANCH: ${{ inputs.branch }}

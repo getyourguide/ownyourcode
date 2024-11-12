@@ -44,7 +44,7 @@ owner, a comment is added to the PR with the list of orphan files.
 ### Inputs
 
 - `github_token`: String - Github Token (required)
-- `fail-on-missing-codeowners`: Boolean - Fail CI if there are files without
+- `fail_on_missing_codeowners`: Boolean - Fail CI if there are files without
   owners (default: true)
 - `codeowners_path`: String - Path to the codeowners file (default: CODEOWNERS)
 - `pr_number`: Number - Scan only the files modified in the PR (optional if
@@ -83,18 +83,20 @@ permissions:
 
 jobs:
   check-codeowners:
-    name: Check CODEOWNERS
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Check CODEOWNERS
+        id: ownyourcode
         uses: getyourguide/ownyourcode@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           pr_number: ${{ github.event.number }}
+
+      - name: Print Output
+        run: |
+          echo "${{ steps.ownyourcode.outputs.total_orphan_files }}"
+          echo "${{ steps.ownyourcode.outputs.total_scanned_files }}"
+          echo "${{ steps.ownyourcode.outputs.failed }}"
 ```
 
 ### Using on a branch
@@ -106,19 +108,17 @@ on:
   push:
     branches:
       - main
+
 permissions:
   id-token: write
   contents: read
   pull-requests: write # we need this to write comments in PRs
 jobs:
   check-codeowners:
-    name: Check CODEOWNERS
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Test Local Action
+      - name: Check CODEOWNERS
+        id: ownyourcode
         uses: getyourguide/ownyourcode@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
@@ -131,26 +131,21 @@ jobs:
 ---
 jobs:
   check-codeowners:
-    name: Check CODEOWNERS
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
       - name: Check CODEOWNERS
         id: ownyourcode
         uses: getyourguide/ownyourcode@v1
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          pr_number: ${{ github.event.number }}
+          branch: ${{ github.ref_name }}
+          fail_on_missing_codeowners: false # important for next step to work
 
       - name: Print Output
-        id: output
         run: |
-          echo "${{ steps.ownyourcode.outputs.total_orphan_files }}"
-          echo "${{ steps.ownyourcode.outputs.total_scanned_files }}"
-          echo "${{ steps.ownyourcode.outputs.failed }}"
+          echo "Total orphan files: ${{ steps.ownyourcode.outputs.total_orphan_files }}"
+          echo "Total scanned files: ${{ steps.ownyourcode.outputs.total_scanned_files }}"
+          echo "Failed: ${{ steps.ownyourcode.outputs.failed }}"
 ```
 
 ## CODEOWNERS file

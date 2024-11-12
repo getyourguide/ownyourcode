@@ -135,7 +135,7 @@ describe("OwnYourCode - PR Mode", () => {
     );
   });
 
-  it("should not fail if files have no owners but fail-on-missing-codeowners input is false", async () => {
+  it("should not fail if files have no owners but fail_on_missing_codeowners input is false", async () => {
     inputs.FAIL_ON_MISSING_CODEOWNERS = "false";
     vi.spyOn(PrHandler.prototype, "getCodeOwnersFile").mockResolvedValueOnce(
       "__FILE-CONTENT__",
