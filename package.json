@@ -62,6 +62,9 @@
     "vitest": "^2.1.9"
   },
   "overrides": {
-    "esbuild": "0.25.0"
+    "esbuild": "0.25.0",
+    "@octokit/request@8.4.0": {
+      "@octokit/endpoint": "9.0.6"
+    }
   }
 }
