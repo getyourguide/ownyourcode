@@ -11,6 +11,7 @@ const mockLog = vi.spyOn(core, "info");
 const parseOutput = (input: string) =>
   input.trim().replace(/^\s+/gm, match => match.replace(/ /g, ""));
 const mockSetOutput = vi.spyOn(core, "setOutput").mockImplementation(() => {});
+const mockSetFailed = vi.spyOn(core, "setFailed");
 // Mock github context
 vi.spyOn(github.context, "repo", "get").mockImplementation(() => {
   return {
@@ -38,6 +39,7 @@ describe("OwnYourCode - PR Mode", () => {
   });
   afterEach(() => {
     mockLog.mockClear();
+    mockSetFailed.mockClear();
   });
 
   it("should log files missing codeowners", async () => {
@@ -114,7 +116,6 @@ describe("OwnYourCode - PR Mode", () => {
       "docs/api.md",
       "src/index.ts",
     ]);
-    const mockSetFailed = vi.spyOn(core, "setFailed");
 
     await run();
     expect(mockSetFailed).toHaveBeenCalledWith(
@@ -126,7 +127,6 @@ describe("OwnYourCode - PR Mode", () => {
     const mockGetCodeOwnersFile = vi
       .spyOn(PrHandler.prototype, "getCodeOwnersFile")
       .mockRejectedValueOnce(new Error("CODEOWNERS file not present"));
-    const mockSetFailed = vi.spyOn(core, "setFailed");
 
     await run();
     expect(mockGetCodeOwnersFile).toHaveBeenCalledWith("./CODEOWNERS.md");
@@ -145,7 +145,6 @@ describe("OwnYourCode - PR Mode", () => {
       "docs/api.md",
       "src/index.ts",
     ]);
-    const mockSetFailed = vi.spyOn(core, "setFailed");
 
     await run();
     expect(mockSetFailed).not.toHaveBeenCalled();
