@@ -7,8 +7,9 @@ script                    @getyourguide/tp
 src                       @getyourguide/tp
 .env.example              @getyourguide/tp
 .gitignore                @getyourguide/tp
+.nvmrc                    @getyourguide/tp
 .prettier*                @getyourguide/tp
-action.yml               @getyourguide/tp
+action.yml                @getyourguide/tp
 LICENSE                   @getyourguide/tp
 package*                  @getyourguide/tp
 README.md                 @getyourguide/tp
