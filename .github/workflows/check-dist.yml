@@ -17,6 +17,10 @@ on:
     branches:
       - main
 
+
+concurrency:
+  group: ${{ github.workflow }}${{ github.ref_name != github.event.repository.default_branch && github.ref || github.run_id }}
+  cancel-in-progress: ${{ github.ref_name != github.event.repository.default_branch }}
 permissions:
   contents: read
 
