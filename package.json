@@ -44,7 +44,7 @@
     "glob-to-regexp": "0.4.1"
   },
   "devDependencies": {
-    "@github/local-action": "^2.6.2",
+    "@github/local-action": "^3.1.4",
     "@tsconfig/node20": "^20.1.4",
     "@types/node": "^22.13.4",
     "@typescript-eslint/eslint-plugin": "^8.20.0",
