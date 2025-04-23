@@ -13,7 +13,7 @@ never/gonna/say/goodbye        @getyourguide/foo
 own-your-code                  @getyourguide/bar
 path/to/file/                  @getyourguide/tp
 packages/commons/utils/**tests**/query-params.test.ts @getyourguide/tp
-*bundles*                      @getyourguide/ce
+*bundles*                      @getyourguide/bar
 `;
 
 describe("CodeOwnersFile.isCovered", () => {
